@@ -1,0 +1,490 @@
+
+
+
+
+**Setting Up an Armbian System on Orange Pi One
+
+
+
+
+These workarounds have been provided to help you set up and optimize your 
+Armbian system on Orange Pi One. Please note that these instructions are 
+provided as-is, and I have made every effort to ensure their accuracy. 
+However, if any mistakes are found, kindly point them out, and I will be 
+happy to correct and cite them accordingly.
+
+I'll make sure to review these instructions regularly and update them for 
+better clarity and understanding. As of now, I would like to clarify that 
+I am unable to send emails or initiate contact with users.
+
+Feel free to revisit and rewrite these instructions later for better clarity 
+and understanding. Thank you.
+
+
+
+
+
+#``````````````````````````````````````````````````````````````````````````````#
+Download and write the Armbian image to an SD card for your Orange Pi One using balenaEtcher on Windows.
+
+
+First, ensure you have the balenaEtcher tool installed on your Windows system. 
+If you don't have it yet, download it from the official website: 
+https://www.balena.io/etcher/.
+
+Next, download the Armbian image for Orange Pi One by using your web browser 
+and accessing this URL: 
+https://dl.armbian.com/orangepione/archive/Armbian_24.2.1_Orangepione_bookworm_current_6.6.16.img.xz. 
+This will download an image file named Armbian_24.2.1_Orangepione_bookworm_current_6.6.16.img.xz 
+which is the operating system image for your device.
+
+
+
+
+
+#``````````````````````````````````````````````````````````````````````````````#
+Download and install PuTTY, and connect to your Orange Pi One device via SSH using PuTTY on Windows.
+
+Download and Install PuTTY: Visit the official website (https://www.putty.org/) to download and install PuTTY on your Windows system.
+
+Configure PuTTY:
+
+Open PuTTY and enter the IP address of your Orange Pi One device (e.g., 192.168.2.103) in the "Host Name (or IP address)" field under the "Session" category.
+To find the IP address, check your router's DHCP clients list.
+In the "Saved Sessions" field, enter a name for the session (e.g., "Orange Pi One") and click "Save" to save the session.
+Connect to the Device:
+
+Click the "Open" button at the bottom of the PuTTY Configuration window to open a new SSH session.
+In the terminal window that appears, enter your username (root) and password (1234) when prompted.
+
+
+
+
+
+#``````````````````````````````````````````````````````````````````````````````#
+Welcome to Armbian! 
+
+Documentation: https://docs.armbian.com | Community support: https://forum.armbian.com
+
+IP address: 192.168.2.103
+
+Create root password:
+    MYPASSWORD
+    
+    
+    
+    
+    
+#``````````````````````````````````````````````````````````````````````````````#
+Choose default system command shell:
+
+1) bash
+2) zsh
+
+    1
+    
+    
+    
+    
+    
+#``````````````````````````````````````````````````````````````````````````````#
+Creating a new user account. Press <Ctrl-C> to abort
+
+Please provide a username (eg. your first name): 
+    admin99
+
+Create user (admin99) password:
+    MYPASSWORD
+    
+Please provide your real name: Admin99
+
+
+
+
+
+#``````````````````````````````````````````````````````````````````````````````#
+Dear Admin99, your account admin99 has been created and is sudo enabled.
+Please use this account for your daily work from now on.
+
+Detected timezone: Asia/Manila
+
+Set user language based on your location? [Y/n]
+    y
+    
+    
+    
+
+    
+#``````````````````````````````````````````````````````````````````````````````#
+At your location, more locales are possible:
+
+1) en_PH.UTF-8
+2) fil_PH
+3) tl_PH.UTF-8
+4) Skip generating locales
+Please enter your choice:
+    1
+    
+    
+    
+    
+    
+#``````````````````````````````````````````````````````````````````````````````#
+Generating locales: en_PH.UTF-8
+root@orangepione:~#
+
+
+usermod -aG sudo admin99
+visudo
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+# User privilege specification
+root    ALL=(ALL:ALL) ALL
+        admin99 ALL=(ALL:ALL) NOPASSWD: ALL
+
+# Allow members of group sudo to execute any command
+%sudo   ALL=(ALL:ALL) ALL
+        admin99 ALL=(ALL:ALL) NOPASSWD: ALL
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
+
+
+
+
+
+
+#``````````````````````````````````````````````````````````````````````````````#
+hostnamectl set-hostname MYARMBIAN
+reboot
+#``````````````````````````````````````````````````````````````````````````````#
+
+
+
+
+
+
+#``````````````````````````````````````````````````````````````````````````````#
+Customize the user environment and update the system on your Orange Pi One device with Armbian.
+
+Customize the User Environment:
+Open the user's bash profile configuration file using the nano text editor by typing the following command and pressing Enter:
+    nano ~/.bashrc
+
+In the editor, add the following line to the file:
+    export PATH=$PATH:/sbin:/usr/sbin
+
+Save the changes by pressing Ctrl+O, then exit the editor by pressing Ctrl+X.
+
+
+Reload the user's bash profile by typing the following command and pressing Enter:
+    source ~/.bashrc
+
+Verify Date and Time:
+Check the current date and time by typing the following command and pressing Enter:
+    date
+
+If the date and time are incorrect, update the system time by typing the following commands and pressing Enter after each command:
+    sudo date -s "YYYY-MM-DD HH:MM:SS"
+    
+   
+Update the System:
+Update the package lists by typing the following command and pressing Enter:
+    sudo apt update
+Perform system upgrades by typing the following command and pressing Enter:
+    sudo apt -y upgrade    
+#``````````````````````````````````````````````````````````````````````````````#
+
+
+
+
+
+#``````````````````````````````````````````````````````````````````````````````#
+sudo armbian-config
+
+	Personal
+		Timezone
+	System
+        	Firmware >> Update all packages and firmware
+			Firmware has been update, Reboot?
+				< Yes >
+
+
+
+
+
+#``````````````````````````````````````````````````````````````````````````````#
+Create a Swapfile Script:
+
+Open a new file using the nano text editor by typing the following command and pressing Enter:
+    nano add_swapfile.sh
+
+Copy and paste the following script into the editor, save the changes by pressing Ctrl+O, and exit the editor by pressing Ctrl+X:
+
+################################################################################
+# This script safely adds a 1GB swapfile to an Armbian system.
+# To use the script, simply type the following command:
+# ./add_swapfile.sh
+
+if [ -f /swapfile ]; then
+  echo "A swapfile is already present. Please remove the swapfile before running this script."
+  exit 1
+fi
+
+echo "Creating a 1GB swapfile..."
+sudo fallocate -l 1G /swapfile
+
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+
+echo "Showing swap usage..."
+sudo swapon --show
+
+sudo cp /etc/fstab /etc/fstab.bak
+
+if sudo grep -q '/swapfile' /etc/fstab; then
+  echo "The swapfile entry already exists in /etc/fstab."
+else
+  echo 'Adding swapfile entry to /etc/fstab...'
+  sudo echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+fi
+
+if [ $(sudo grep -c '/swapfile' /proc/swaps) -eq 1 ]; then
+  echo "Swapfile added and mounted successfully."
+else
+  echo "Failed to add swapfile. Please check the script output for errors."
+  exit 1
+fi
+################################################################################
+
+
+Make the Swapfile Script Executable and Run It:
+Make the add_swapfile.sh script executable by typing the following command and pressing Enter:
+    chmod +x add_swapfile.sh
+
+Run the add_swapfile.sh script by typing the following command and pressing Enter:
+    ./add_swapfile.sh
+
+
+Configure Swap Settings:
+Open the /etc/sysctl.conf file using the nano text editor as the root user by typing the following command and pressing Enter:
+    sudo nano /etc/sysctl.conf
+
+Add or modify the following line at the end of the /etc/sysctl.conf file:
+    vm.swappiness=100
+
+Save the changes by pressing Ctrl+O, and exit the editor by pressing Ctrl+X.
+
+Reboot the System:
+To reboot the system, type the following command and press Enter:
+    reboot
+
+
+
+
+#``````````````````````````````````````````````````````````````````````````````#
+Prevent USB devices from entering a low-power state or "sleeping" due to 
+USB Autosuspend on your Orange Pi One device with Armbian.
+
+
+Create and Configure a Udev Rule:
+Open a new file using the nano text editor as the root user by typing the following command and pressing Enter:
+    sudo nano /etc/udev/rules.d/10-usb-power.rules
+
+Copy and paste the following lines into the editor, save the changes by pressing Ctrl+O, and exit the editor by pressing Ctrl+X:
+    ACTION=="add", SUBSYSTEM=="usb", TEST=="power/control", ATTR{power/control}="on"
+
+Reload Udev Rules:
+Reload the udev rules by typing the following command and pressing Enter:
+    sudo udevadm control --reload-rules
+
+
+
+
+
+
+#``````````````````````````````````````````````````````````````````````````````#
+Disable sleep and hibernation, and set runtime power management to "ignore" on your Orange Pi One device with Armbian.
+
+
+Create and Configure a Script to Update Power Management Settings:
+Open a new file using the nano text editor by typing the following command and pressing Enter:
+    nano disable_sleep.sh
+
+Copy and paste the following script into the editor, save the changes by pressing Ctrl+O, and exit the editor by pressing Ctrl+X:
+
+
+################################################################################
+#!/bin/bash
+
+# Function to comment out existing settings
+comment_out_setting() {
+  local setting=$1}      # Comment out the setting if it exists
+  sudo sed -i "s/^\($setting.*\)/#\1/" /etc/systemd/logind.conf
+}
+
+# Function to add or modify a setting
+add_or_modify_setting() {
+  local setting=$1
+  local value=$2}      # Comment out any existing setting
+  comment_out_setting "$setting"      # Add the new setting
+  echo "$setting=$value" | sudo tee -a /etc/systemd/logind.conf
+}
+
+# Prevent sleep and hibernation due to inactivity
+add_or_modify_setting "IdleAction" "ignore"
+add_or_modify_setting "IdleActionSec" "0"
+
+# Prevent sleep and hibernation for lid close and suspend keys
+add_or_modify_setting "HandleSuspendKey" "ignore"
+add_or_modify_setting "HandleLidSwitch" "ignore"
+add_or_modify_setting "HandleLidSwitchExternalPower" "ignore"
+add_or_modify_setting "HandleLidSwitchDocked" "ignore"
+
+# Disable runtime power management
+add_or_modify_setting "RuntimePowerManagement" "ignore"
+
+# Restart systemd-logind to apply the changes
+sudo systemctl restart systemd-logind.service
+
+echo "Power management settings updated. The system will remain active."
+echo "Please press Enter to reboot the system."
+read -p ""
+
+# Reboot the system
+sudo reboot
+################################################################################
+
+
+
+Make the Script Executable and Run It:
+Make the disable_sleep.sh script executable by typing the following command and pressing Enter:
+    chmod +x disable_sleep.sh
+
+Run the disable_sleep.sh script by typing the following command and pressing Enter:
+    ./disable_sleep.sh
+
+
+
+
+#``````````````````````````````````````````````````````````````````````````````#
+#//These methods should prevent your Armbian Orange Pi One from going into 
+sleep, hibernate, or power down modes when using only the terminal. 
+
+
+
+#//1.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+Edit the logind configuration file:
+
+Open the logind configuration file:
+    sudo nano /etc/systemd/logind.conf
+    
+Add the following lines at the end of the file:
+################################################################################
+HandleLidSwitch=ignore
+HandleLidSwitchDocked=ignore
+IdleAction=ignore
+################################################################################
+
+Save the file and exit (Ctrl+X, Y, Enter).
+
+Restart the systemd-logind service:
+    sudo systemctl restart systemd-logind
+
+
+
+
+#//2.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#//Change the line GOVERNOR="ondemand" to GOVERNOR="performance".
+
+sudo nano /etc/default/cpufrequtils
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+ENABLE=false
+MIN_SPEED=480000
+MAX_SPEED=1400000
+GOVERNOR=performance
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
+
+
+#//3.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+Use a Kernel Parameter:
+
+Edit the /boot/armbianEnv.txt file:
+    sudo nano /boot/armbianEnv.txt
+
+Add the following line at the end of the file:
+    cmdline=... mem_sleep_default=deep
+    
+Save the file and exit.
+
+
+Reboot the system for the changes to take effect:
+    sudo reboot
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
+
+
+
+
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+This script will update the system, install necessary packages, configure Samba and CUPS, and add the admin99 user to the necessary groups.
+
+
+################################################################################
+#!/bin/bash
+
+main() {
+    update_system
+    install_packages
+    configure_samba
+    configure_cups
+    add_user_to_groups
+}
+
+update_system() {
+    echo "Updating system..."
+    sudo apt update && sudo apt -y upgrade
+}
+
+install_packages() {
+    echo "Installing packages..."
+    sudo apt -y install dosfstools ntfs-3g fuse3 exfat-fuse hfsutils net-tools poppler-utils samba samba-common-bin python3 python3-pip python3-venv python3-dev python3-pyudev cups cups-client cups-common cups-pdf libcups2-dev printer-driver-escpr cups-filters printer-driver-gutenprint python3-cups python3-serial python3-magic
+}
+
+configure_samba() {
+    echo "Configuring Samba..."
+    sudo groupadd smb
+    sudo usermod -aG smb admin99
+    sudo systemctl restart smbd nmbd
+    sudo smbpasswd -a admin99 MYPASSWORD
+    mkdir -m 777 /home/admin99/smb
+    echo -e "[admin99]\n\tpath = /home/admin99\n\tbrowseable = yes\n\twritable = yes\n\tvalid users = admin99" | sudo tee -a /etc/samba/smb.conf
+}
+
+configure_cups() {
+    echo "Configuring CUPS..."
+    sudo cupsctl --remote-any
+    sudo systemctl restart cups
+}
+
+add_user_to_groups() {
+    echo "Adding user to groups..."
+    sudo usermod -a -G lpadmin admin99
+    sudo usermod -a -G dialout admin99
+}
+
+main
+
+################################################################################
+
+
+sudo reboot
+
+
+
+
