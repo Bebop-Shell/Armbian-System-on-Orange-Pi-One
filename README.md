@@ -14,5 +14,5 @@ I'll make sure to review these instructions regularly and update them for
 better clarity and understanding. As of now, I would like to clarify that 
 I am unable to send emails or initiate contact with users.
 
-Feel free to revisit and rewrite these instructions later for better clarity 
-and understanding. Thank you.
+If any part of these instructions seems unclear, please don't hesitate to 
+revise that specific section for better understanding. Thank you.
