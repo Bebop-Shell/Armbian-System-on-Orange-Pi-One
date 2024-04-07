@@ -14,4 +14,4 @@ These instructions are regularly reviewed to ensure clarity.  For your
 reference, I cannot currently send emails or initiate contact with users. 
 Feel free to revise any unclear sections for better understanding.
 
-Thank you!
+Thank you ;-)
