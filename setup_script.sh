@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# This script automates the setup process for a Linux server, specifically tailored for
+# environments where file system support, network tools, printing services, and user
+# management are required. It updates the system, installs necessary packages, configures
+# Samba for network file sharing, configures CUPS for printing services, and adds a user
+# to groups for printing and serial communication. This script is designed to streamline
+# the setup process for servers that require these functionalities, ensuring a smooth
+# and efficient setup.
+
 # Main function that orchestrates the setup process
 main() {
     update_system
@@ -48,3 +56,4 @@ add_user_to_groups() {
 
 # Executes the main function to start the setup process
 main
+
