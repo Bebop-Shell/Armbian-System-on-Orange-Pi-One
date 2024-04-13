@@ -192,7 +192,6 @@ sudo armbian-config
 
 #``````````````````````````````````````````````````````````````````````````````#
 ## run add_swapfile.sh
-$ ./add_swapfile.sh
 
 Make the add_swapfile.sh script executable by typing the following command and pressing Enter:
     chmod +x add_swapfile.sh
