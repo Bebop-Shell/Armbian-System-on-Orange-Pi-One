@@ -309,7 +309,7 @@ Save the file and exit.
 
 
 Reboot the system for the changes to take effect:
-    sudo reboot
+    $ sudo reboot
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
 
@@ -320,57 +320,9 @@ Reboot the system for the changes to take effect:
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 This script will update the system, install necessary packages, configure Samba and CUPS, and add the admin99 user to the necessary groups.
+	$ ./setup_script.sh
 
-
-################################################################################
-#!/bin/bash
-
-main() {
-    update_system
-    install_packages
-    configure_samba
-    configure_cups
-    add_user_to_groups
-}
-
-update_system() {
-    echo "Updating system..."
-    sudo apt update && sudo apt -y upgrade
-}
-
-install_packages() {
-    echo "Installing packages..."
-    sudo apt -y install dosfstools ntfs-3g fuse3 exfat-fuse hfsutils net-tools poppler-utils samba samba-common-bin python3 python3-pip python3-venv python3-dev python3-pyudev cups cups-client cups-common cups-pdf libcups2-dev printer-driver-escpr cups-filters printer-driver-gutenprint python3-cups python3-serial python3-magic
-}
-
-configure_samba() {
-    echo "Configuring Samba..."
-    sudo groupadd smb
-    sudo usermod -aG smb admin99
-    sudo systemctl restart smbd nmbd
-    sudo smbpasswd -a admin99 MYPASSWORD
-    mkdir -m 777 /home/admin99/smb
-    echo -e "[admin99]\n\tpath = /home/admin99\n\tbrowseable = yes\n\twritable = yes\n\tvalid users = admin99" | sudo tee -a /etc/samba/smb.conf
-}
-
-configure_cups() {
-    echo "Configuring CUPS..."
-    sudo cupsctl --remote-any
-    sudo systemctl restart cups
-}
-
-add_user_to_groups() {
-    echo "Adding user to groups..."
-    sudo usermod -a -G lpadmin admin99
-    sudo usermod -a -G dialout admin99
-}
-
-main
-
-################################################################################
-
-
-sudo reboot
+$ sudo reboot
 
 
 
