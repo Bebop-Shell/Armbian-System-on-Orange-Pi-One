@@ -1,7 +1,9 @@
 # This script safely adds a 1GB swapfile to an Armbian system.
 # To use the script, simply type the following command:
+#
 # $ chmod +x add_swapfile.sh
 # $ ./add_swapfile.sh
+#
 
 if [ -f /swapfile ]; then
   echo "A swapfile is already present. Please remove the swapfile before running this script."
