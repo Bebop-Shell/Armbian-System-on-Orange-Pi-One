@@ -191,9 +191,14 @@ sudo armbian-config
 
 
 #``````````````````````````````````````````````````````````````````````````````#
-#//run add_swapfile.sh
+## run add_swapfile.sh
 $ ./add_swapfile.sh
 
+Make the add_swapfile.sh script executable by typing the following command and pressing Enter:
+    chmod +x add_swapfile.sh
+
+Run the add_swapfile.sh script by typing the following command and pressing Enter:
+    ./add_swapfile.sh
 
 
 
@@ -237,60 +242,8 @@ Reload the udev rules by typing the following command and pressing Enter:
 
 
 #``````````````````````````````````````````````````````````````````````````````#
-Disable sleep and hibernation, and set runtime power management to "ignore" on your Orange Pi One device with Armbian.
+## run disable_sleep.sh
 
-
-Create and Configure a Script to Update Power Management Settings:
-Open a new file using the nano text editor by typing the following command and pressing Enter:
-    nano disable_sleep.sh
-
-Copy and paste the following script into the editor, save the changes by pressing Ctrl+O, and exit the editor by pressing Ctrl+X:
-
-
-################################################################################
-#!/bin/bash
-
-# Function to comment out existing settings
-comment_out_setting() {
-  local setting=$1}      # Comment out the setting if it exists
-  sudo sed -i "s/^\($setting.*\)/#\1/" /etc/systemd/logind.conf
-}
-
-# Function to add or modify a setting
-add_or_modify_setting() {
-  local setting=$1
-  local value=$2}      # Comment out any existing setting
-  comment_out_setting "$setting"      # Add the new setting
-  echo "$setting=$value" | sudo tee -a /etc/systemd/logind.conf
-}
-
-# Prevent sleep and hibernation due to inactivity
-add_or_modify_setting "IdleAction" "ignore"
-add_or_modify_setting "IdleActionSec" "0"
-
-# Prevent sleep and hibernation for lid close and suspend keys
-add_or_modify_setting "HandleSuspendKey" "ignore"
-add_or_modify_setting "HandleLidSwitch" "ignore"
-add_or_modify_setting "HandleLidSwitchExternalPower" "ignore"
-add_or_modify_setting "HandleLidSwitchDocked" "ignore"
-
-# Disable runtime power management
-add_or_modify_setting "RuntimePowerManagement" "ignore"
-
-# Restart systemd-logind to apply the changes
-sudo systemctl restart systemd-logind.service
-
-echo "Power management settings updated. The system will remain active."
-echo "Please press Enter to reboot the system."
-read -p ""
-
-# Reboot the system
-sudo reboot
-################################################################################
-
-
-
-Make the Script Executable and Run It:
 Make the disable_sleep.sh script executable by typing the following command and pressing Enter:
     chmod +x disable_sleep.sh
 
